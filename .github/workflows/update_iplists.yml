@@ -1,9 +1,13 @@
 name: update_iplists
 
 on:
+  workflow_dispatch:
   schedule:
-    - cron: "0 08 * * *" 
-    - cron: "0 20 * * *" 
+    - cron: "0 08 * * *"
+    - cron: "0 20 * * *"
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -11,8 +15,6 @@ jobs:
     steps:
       - name: Clone Project
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -24,24 +26,27 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Execute update_iplists.py Script
+      - name: Generate MikroTik .rsc files
         run: python cloudflare_ips.py
 
       - name: Commit .rsc Files
         run: |
-          #!/bin/bash
-          NOW=$(date +"%m-%d-%Y %H:%M:%S PT")
+          set -e
+          NOW=$(date -u +"%Y-%m-%d %H:%M:%S UTC")
 
-          if ! grep -q "error" "cloudflare-ips-v4.rsc" && ! grep -q "error" "cloudflare-ips-v6.rsc"; then
-            git config --local user.email "noreply@github.actions.bot"
-            git config --local user.name "GitHub Actions"
-            git add cloudflare-ips-v*
-            git status
-            git commit -m "Run automations and generate fresh lists - $NOW"
-          fi
+          test -f cf-ips-v4.rsc
+          test -f cf-ips-v6.rsc
+
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+
+          git add cf-ips-v*.rsc
+          git status
+          git commit -m "Update Cloudflare IP lists - $NOW" || exit 0
 
       - name: Push Changes
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: main
+
