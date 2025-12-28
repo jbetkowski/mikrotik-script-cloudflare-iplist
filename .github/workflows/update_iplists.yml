@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Generate MikroTik .rsc files
-        run: python cloudflare_ips.py
+        run: python cloudflare_ip.py
 
       - name: Commit .rsc Files
         run: |
