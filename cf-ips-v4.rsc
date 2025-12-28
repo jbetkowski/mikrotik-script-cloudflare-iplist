@@ -1,4 +1,4 @@
-# Generated on 2025-12-28 01:52:08 UTC
+# Generated on 2025-12-28 08:13:53 UTC
 /ip firewall address-list
 remove [find where list="cloudflare-ips" and comment="CF"]
 add list="cloudflare-ips" address="173.245.48.0/20" comment="CF"
