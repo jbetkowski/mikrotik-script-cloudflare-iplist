@@ -2,6 +2,12 @@
 # Downloads and imports cf-ips-v4.rsc from:
 # https://github.com/jbetkowski/mikrotik-script-cloudflare-iplist
 
+# --- idempotent cleanup (remove old items with same names) ---
+/system script remove [find name="jb-cloudflare-download"]
+/system script remove [find name="jb-cloudflare-import"]
+/system scheduler remove [find name="jb-cf-dl"]
+/system scheduler remove [find name="jb-cf-im"]
+
 # Script to download the Cloudflare list (IPv4)
 /system script add name="jb-cloudflare-download" source={
   :log info "CF v4: download IP list from jbetkowski repo";
