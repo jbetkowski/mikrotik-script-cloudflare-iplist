@@ -2,6 +2,12 @@
 # Downloads from:
 # https://raw.githubusercontent.com/jbetkowski/mikrotik-script-cloudflare-iplist/main/cf-ips-v6.rsc
 
+# --- Idempotent cleanup (remove old items with same names) ---
+/system script remove [find name="jb-cloudflare-download-v6"]
+/system script remove [find name="jb-cloudflare-replace-v6"]
+/system scheduler remove [find name="jb-cf-dl-v6"]
+/system scheduler remove [find name="jb-cf-rp-v6"]
+
 # Script to download the Cloudflare list (v6)
 /system script add name="jb-cloudflare-download-v6" source={
   :log info "Download Cloudflare IP list (v6) - jbetkowski";
