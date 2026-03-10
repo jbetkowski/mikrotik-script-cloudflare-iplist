@@ -1,4 +1,4 @@
-# Generated on 2026-03-09 03:18:28 UTC
+# Generated on 2026-03-10 03:09:51 UTC
 /ipv6 firewall address-list
 remove [find where list="cloudflare-ips" and comment="CF"]
 add list="cloudflare-ips" address="2400:cb00::/32" comment="CF"
